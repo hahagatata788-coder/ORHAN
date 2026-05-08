@@ -1,72 +1,88 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const FormData = require("form-data");
+
+const getBase = async () => {
+        const res = await axios.get("https://raw.githubusercontent.com/mahmudx7/HINATA/main/baseApiUrl.json");
+        return res.data.mahmud;
+};
 
 module.exports = {
-  config: {
-    name: "catbox",
-    version: "2.1",
-    author: "EryXenX",
-    role: 0,
-    shortDescription: "Upload media via API",
-    category: "media",
-    cooldowns: 5
-  },
+        config: {
+                name: "catbox",
+                aliases: ["cb"],
+                version: "1.7",
+                author: "MahMUD",
+                countDown: 10,
+                role: 0,
+                description: {
+                        bn: "যেকোনো মিডিয়া ফাইলকে লিঙ্কে রূপান্তর করুন",
+                        en: "Convert any media file into a link",
+                        vi: "Chuyển đổi bất kỳ tệp phương tiện nào thành liên kết"
+                },
+                category: "tools",
+                guide: {
+                        bn: '   {pn}: যেকোনো ছবি/ভিডিওতে রিপ্লাই দিয়ে ব্যবহার করুন',
+                        en: '   {pn}: Reply to any image/video to get the link',
+                        vi: '   {pn}: Phản hồi bất kỳ ảnh/video nào để lấy liên kết'
+                }
+        },
 
-  onStart: async function ({ api, event }) {
-    const { threadID, messageReply, type, messageID } = event;
+        langs: {
+                bn: {
+                        noMedia: "🐤 | বেবি, একটি ছবি বা ভিডিওতে রিপ্লাই দাও! 🖼",
+                        uploading: "⌛ | আপলোড হচ্ছে, একটু অপেক্ষা করো বেবি... <😘",
+                        success: "𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐝 ✅\n\n🔗 𝐔𝐑𝐋: %1",
+                        error: "× সমস্যা হয়েছে: %1। প্রয়োজনে Contact Farhan..."
+                },
+                en: {
+                        noMedia: "🐤 | Baby, please reply to a media file (image/video)! 🖼",
+                        uploading: "⌛ | Uploading, please wait a moment baby... <😘",
+                        success: "𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐝 ✅\n\n🔗 𝐔𝐑𝐋: %1",
+                        error: "× API error: %1. Contact Farhan for help."
+                },
+                vi: {
+                        noMedia: "🐤 | Cưng ơi, vui lòng phản hồi một tệp ảnh hoặc video! 🖼",
+                        uploading: "⌛ | Đang tải lên, chờ chút nhé cưng... <😘",
+                        success: "Tải lên thành công ✅\n\n🔗 𝐔𝐑𝐋: %1",
+                        error: "× Lỗi: %1. Liên hệ Farhan để hỗ trợ."
+                }
+        },
 
-    if (type !== "message_reply" || !messageReply.attachments.length) {
-      return api.sendMessage("❐ Reply to image/video/audio file", threadID, messageID);
-    }
+        onStart: async function ({ api, event, message, getLang }) {
+                const authorName = String.fromCharCode(77, 97, 104, 77, 85, 68);
+                if (this.config.author !== authorName) {
+                        return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
+                }
 
-    const file = messageReply.attachments[0];
-    const filePath = path.join(__dirname, "cache_" + Date.now());
+                if (event.type !== "message_reply" || !event.messageReply.attachments.length) {
+                        return message.reply(getLang("noMedia"));
+                }
 
-    try {
-      const download = await axios({
-        url: file.url,
-        method: "GET",
-        responseType: "stream"
-      });
+                try {
+                        api.setMessageReaction("⌛", event.messageID, () => {}, true);
+                        const waitMsg = await message.reply(getLang("uploading"));
 
-      const writer = fs.createWriteStream(filePath);
-      download.data.pipe(writer);
+                        const attachmentUrl = encodeURIComponent(event.messageReply.attachments[0].url);
+                        const baseUrl = await getBase();
+                        const apiUrl = `${baseUrl.replace(/\/$/, "")}/api/catbox?url=${attachmentUrl}`;
 
-      writer.on("finish", async () => {
-        try {
-          const form = new FormData();
-          form.append("file", fs.createReadStream(filePath));
+                        const response = await axios.get(apiUrl, { timeout: 100000 });
 
-          const upload = await axios.post(
-            "https://catbox-api-d07o.onrender.com/upload",
-            form,
-            {
-              headers: form.getHeaders()
-            }
-          );
+                        if (response.data.status && response.data.link) {
+                                if (waitMsg?.messageID) api.unsendMessage(waitMsg.messageID);
+                                
+                                return message.reply({
+                                        body: getLang("success", response.data.link)
+                                }, () => {
+                                        api.setMessageReaction("✅", event.messageID, () => {}, true);
+                                });
+                        } else {
+                                throw new Error("API response status is false.");
+                        }
 
-          fs.unlinkSync(filePath);
-
-          if (upload.data && upload.data.url) {
-            return api.sendMessage(
-              upload.data.url,
-              threadID,
-              messageID
-            );
-          } else {
-            return api.sendMessage("❌ Upload failed", threadID, messageID);
-          }
-
-        } catch (err) {
-          fs.existsSync(filePath) && fs.unlinkSync(filePath);
-          return api.sendMessage("❌ API error", threadID, messageID);
+                } catch (err) {
+                        console.error("Catbox Error:", err);
+                        api.setMessageReaction("❌", event.messageID, () => {}, true);
+                        return message.reply(getLang("error", err.message));
+                }
         }
-      });
-
-    } catch (e) {
-      return api.sendMessage("❌ Download failed", threadID, messageID);
-    }
-  }
 };
