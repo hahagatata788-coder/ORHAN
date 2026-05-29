@@ -35,8 +35,8 @@ module.exports = {
     }
 
     const admins = [
-      { uid: "61584807686126", names: ["MUNNA VAI MBS"] },
-      { uid: "61565233809956", names: ["M'ʀ Fʌʀʜʌŋ"] }
+      { uid: "61589439339903", names: ["Fahim"] },
+      { uid: "61590157961497", names: ["Raj"] }
     ];
 
     const senderID = String(event.senderID);
@@ -59,11 +59,39 @@ module.exports = {
 
     // 🎤 VOICE LIST (FAST SERVER use করো)
     const voices = [
-      "https://files.catbox.moe/dr32hh.mp3",
-      "https://files.catbox.moe/16r8u7.mp3",
-      "https://files.catbox.moe/cjsb64.mp3",
-      "https://files.catbox.moe/jzx39a.mp3"
-    ];
+  "https://files.catbox.moe/633jsc.mp3",
+  "https://files.catbox.moe/xr7tu5.mp3",
+  "https://files.catbox.moe/ldigw8.mp3",
+  "https://files.catbox.moe/uljq3d.mp3",
+  "https://files.catbox.moe/i6mfe7.mp3",
+  "https://files.catbox.moe/yhdt2u.mp3",
+  "https://files.catbox.moe/802eft.mp3",
+  "https://files.catbox.moe/sm9sz0.mp3",
+  "https://files.catbox.moe/rbbukc.mp3",
+  "https://files.catbox.moe/lssnaq.mp3",
+  "https://files.catbox.moe/dwwa0b.mp3",
+  "https://files.catbox.moe/oqdhpi.mp3",
+  "https://files.catbox.moe/kgl4qy.mp3",
+  "https://files.catbox.moe/q62hco.mp3",
+  "https://files.catbox.moe/941wy3.mp3",
+  "https://files.catbox.moe/y951y2.mp3",
+  "https://files.catbox.moe/j8aly8.mp3",
+  "https://files.catbox.moe/knbcsa.mp3",
+  "https://files.catbox.moe/6r9a0q.mp3",
+  "https://files.catbox.moe/tksdsh.mp3",
+  "https://files.catbox.moe/ng48w0.mp3",
+  "https://files.catbox.moe/xpsbrv.mp3",
+  "https://files.catbox.moe/yclzbp.mp3",
+  "https://files.catbox.moe/jtselt.mp3",
+  "https://files.catbox.moe/k6zvre.mp3",
+  "https://files.catbox.moe/n00sm0.mp3",
+  "https://files.catbox.moe/vobj4c.mp3",
+  "https://files.catbox.moe/nv8t0p.mp3",
+  "https://files.catbox.moe/znipjw.mp3",
+  "https://files.catbox.moe/d0lcxj.mp3",
+  "https://files.catbox.moe/cf01jp.mp3",
+  "https://files.catbox.moe/q7fu6p.mp3"
+];
 
     const voiceUrl = voices[Math.floor(Math.random() * voices.length)];
 
