@@ -30,21 +30,21 @@ try {
   }
 
   // ===== OWNER INFO =====
-  const ownerName = "𝙼𝚁.𝙵𝙰𝚁𝙷𝙰𝙽";
+  const ownerName = "𝙼𝚁.𝙵𝙰𝙷𝙸𝙼";
   const ownerReligion = "𝙸𝚂𝙻𝙰𝙼";
   const ownerRelation = "𝚂𝙸𝙽𝙶𝙻𝙴";
-  const ownerAddress = "𝙹𝙴𝚂𝚂𝙾𝚁𝙴";
+  const ownerAddress = "𝙳𝙷𝙰𝙺𝙰";
   const ownerAge = "𝟐𝟎";
 
   // ===== CONTACT =====
-  const facebook = "fb.com/MR.MUNNA.220";
-  const whatsapp = "wa.me/+8801934640061";
-  const telegram = "t.me/DEVIL_FARHAN_420";
-  const youtube = "yb.com/@munna-vai-mbs";
+  const facebook = "fb.com/fahim.ahmed.raj.207";
+  const whatsapp = "wa.me/+8801771240377";
+  const telegram = "t.me/DEVIL_FAHIM";
+  const youtube = "yb.com/@FAHIM_VAI YT";
 
   // ===== BOT INFO =====
   const botName = global.GoatBot?.config?.nickNameBot || "─꯭𓆩»‌‌𝆠꯭፝֟𝐒𝐈𝐙𝐔𝐊𝐀𝆠꯭፝֟𓆩𝆠፝𝐁𝐀𝐁𝐘𝆠꯭፝֟𝆠꯭፝֟𓆪";
-  const prefix = global.GoatBot?.config?.prefix || "/";
+  const prefix = global.GoatBot?.config?.prefix || "-";
   const totalCommands = global.GoatBot?.commands?.size || 0;
 
   // ===== USERS & GROUPS =====
